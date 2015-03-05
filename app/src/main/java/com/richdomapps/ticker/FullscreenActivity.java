@@ -124,11 +124,11 @@ public class FullscreenActivity extends Activity {
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
+        //For animation
         textViewToAnimate = (TextView) findViewById(R.id.fullscreen_content);
-
         // load the animation
         animationMove = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.fade_in);
+                R.anim.move_text_view);
     }
 
     @Override
@@ -139,6 +139,13 @@ public class FullscreenActivity extends Activity {
         // created, to briefly hint to the user that UI controls
         // are available.
         delayedHide(100);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        delayedStartAnimation(3000);
+
     }
 
     /**
@@ -202,4 +209,13 @@ public class FullscreenActivity extends Activity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
+
+    Handler startAnimationHandler = new Handler();
+    Runnable startAnimationRunnable = new Runnable() {
+        @Override
+        public void run() {
+            textViewToAnimate.startAnimation(animationMove);
+        }
+
+    };
 }
