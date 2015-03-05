@@ -218,4 +218,10 @@ public class FullscreenActivity extends Activity {
         }
 
     };
+
+    private void delayedStartAnimation(int delayMillis) {
+        startAnimationHandler.removeCallbacks(startAnimationRunnable);
+        startAnimationHandler.postDelayed(startAnimationRunnable, delayMillis);
+
+    }
 }
