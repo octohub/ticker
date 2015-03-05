@@ -4,15 +4,20 @@ import com.richdomapps.ticker.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -53,6 +58,8 @@ public class FullscreenActivity extends Activity {
 
     // For Animation
     private TextView textViewToAnimate;
+    private int widthOfTextViewToAnimate;
+
     private Animation animationMove;
 
     @Override
@@ -125,11 +132,16 @@ public class FullscreenActivity extends Activity {
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
         //For animation
-        textViewToAnimate = (TextView) findViewById(R.id.fullscreen_content);
+
         // load the animation
         animationMove = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.move_text_view);
+        textViewToAnimate = (TextView) findViewById(R.id.fullscreen_content);
+
     }
+
+
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -144,7 +156,26 @@ public class FullscreenActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        //Log.d("width", String.valueOf(width));
         delayedStartAnimation(3000);
+
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        Log.d("onWindowFocusChanges", "here");
+
+        widthOfTextViewToAnimate = textViewToAnimate.getWidth();
+        Log.d("width", String.valueOf(widthOfTextViewToAnimate));
+//        int amountOffscreen = (int)(widthOfTextViewToAnimate * 1); /* or whatever */
+//        boolean offscreen = true;
+//
+//        int xOffset = (offscreen) ? amountOffscreen : 0;
+//        RelativeLayout.LayoutParams rlParams =
+//                (RelativeLayout.LayoutParams)textViewToAnimate.getLayoutParams();
+//        rlParams.setMargins(-1*xOffset, 0, xOffset, 0);
+//        textViewToAnimate.setLayoutParams(rlParams);
 
     }
 
@@ -214,12 +245,14 @@ public class FullscreenActivity extends Activity {
     Runnable startAnimationRunnable = new Runnable() {
         @Override
         public void run() {
+            textViewToAnimate.invalidate();
             textViewToAnimate.startAnimation(animationMove);
         }
 
     };
 
     private void delayedStartAnimation(int delayMillis) {
+        Log.d("delayedStartAnimation", "delayedStartAnimation");
         startAnimationHandler.removeCallbacks(startAnimationRunnable);
         startAnimationHandler.postDelayed(startAnimationRunnable, delayMillis);
 
