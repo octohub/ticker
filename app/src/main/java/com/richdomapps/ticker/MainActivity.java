@@ -26,6 +26,10 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    public void fullScreenActivity(View view){
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
