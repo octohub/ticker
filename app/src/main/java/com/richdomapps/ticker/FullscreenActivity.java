@@ -245,8 +245,9 @@ public class FullscreenActivity extends Activity {
     Runnable startAnimationRunnable = new Runnable() {
         @Override
         public void run() {
-            textViewToAnimate.invalidate();
+            Log.d("animation", "running");
             textViewToAnimate.startAnimation(animationMove);
+
         }
 
     };
