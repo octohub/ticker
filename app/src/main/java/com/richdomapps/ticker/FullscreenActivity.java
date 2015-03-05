@@ -11,6 +11,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 
 /**
@@ -47,6 +50,10 @@ public class FullscreenActivity extends Activity {
      * The instance of the {@link SystemUiHider} for this activity.
      */
     private SystemUiHider mSystemUiHider;
+
+    // For Animation
+    private TextView textViewToAnimate;
+    private Animation animationMove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +123,12 @@ public class FullscreenActivity extends Activity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+        textViewToAnimate = (TextView) findViewById(R.id.fullscreen_content);
+
+        // load the animation
+        animationMove = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.fade_in);
     }
 
     @Override
