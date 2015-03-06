@@ -71,7 +71,6 @@ public class SntpClient {
     public boolean requestTime(String host, int timeout) {
         DatagramSocket socket = null;
         try {
-            Log.d("IN HERE", "requestTime");
             socket = new DatagramSocket();
             socket.setSoTimeout(timeout);
             InetAddress address = InetAddress.getByName(host);
@@ -128,7 +127,6 @@ public class SntpClient {
                 socket.close();
             }
         }
-        Log.d("IN HERE", "Return True");
         return true;
     }
 

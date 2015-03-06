@@ -4,6 +4,7 @@ import com.richdomapps.ticker.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -63,6 +64,11 @@ public class FullscreenActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("Fullscreen Activity", "In onCreate");
+
+        long offset = getIntent().getExtras().getLong("offset");
+        Log.d("offset", String.valueOf(offset));
+
 
         //Possible Phones
         //"Nexus 5"

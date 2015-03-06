@@ -47,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void fullScreenActivity(View view){
         Intent intent = new Intent(this, FullscreenActivity.class);
+        intent.putExtra("offset", offset);
         startActivity(intent);
     }
 

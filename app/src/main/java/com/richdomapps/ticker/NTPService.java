@@ -57,7 +57,6 @@ public class NTPService extends Service {
     }
 
     private void getOffset(){
-        Log.d("get items", "called");
         SntpClient client = new SntpClient();
         long offset = 0;
         if (client.requestTime("pool.ntp.org", 10000)) {
@@ -65,14 +64,11 @@ public class NTPService extends Service {
             long ntpTime = client.getNtpTime() + SystemClock.elapsedRealtime() -
                     client.getNtpTimeReference();
             Date current = new Date(ntpTime);
-            Log.d("NTP tag", current.toString());
+
 
             offset = (ntpTime - systemTime);
 
-            Log.d("systemTime: ", String.valueOf(systemTime));
-            Log.d("ntpTime   : ", String.valueOf(ntpTime));
 
-            Log.d("Offset    : ", String.valueOf(offset));
         }
 
         mOffset =  offset;
