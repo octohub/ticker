@@ -4,7 +4,6 @@ import com.richdomapps.ticker.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,11 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -62,11 +58,37 @@ public class FullscreenActivity extends Activity {
 
     private Animation animationMove;
 
+    private String phoneModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_fullscreen);
+        //Possible Phones
+        //"Nexus 5"
+        //"Nexus 7"
+        phoneModel = Build.MODEL;
+        switch (phoneModel) {
+            case "Nexus 5":
+                setContentView(R.layout.activity_fullscreen_nexus_5);
+                animationMove = AnimationUtils.loadAnimation(getApplicationContext(),
+                        R.anim.move_text_view_nexus_5);
+                Log.d("Nexus 5","Nexus 5");
+                break;
+            case "Nexus 7":
+                setContentView(R.layout.activity_fullscreen_nexus_7);
+                animationMove = AnimationUtils.loadAnimation(getApplicationContext(),
+                        R.anim.move_text_view_nexus_5);
+                Log.d("Nexus 7","Nexus 7");
+                break;
+            default:
+                setContentView(R.layout.activity_fullscreen_nexus_5);
+                animationMove = AnimationUtils.loadAnimation(getApplicationContext(),
+                        R.anim.move_text_view_nexus_5);
+                Log.d("default","default");
+                break;
+        }
+
         setupActionBar();
 
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
@@ -134,8 +156,7 @@ public class FullscreenActivity extends Activity {
         //For animation
 
         // load the animation
-        animationMove = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.move_text_view);
+
         textViewToAnimate = (TextView) findViewById(R.id.fullscreen_content);
 
     }

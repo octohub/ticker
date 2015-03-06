@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/linear_interpolator"
+    android:fillAfter="true">
+
+    <translate
+        android:toXDelta="2374"
+        android:duration="3000" />
+
+    <!--toXDelta is 1920 (width of Nexus 7) + 454(width of textView)-->
+    <!--This ends the animation such that right after the last letter goes out of view, it stops-->
+</set>
