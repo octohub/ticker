@@ -17,6 +17,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import java.util.Calendar;
+import java.util.Date;
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -60,13 +63,14 @@ public class FullscreenActivity extends Activity {
     private Animation animationMove;
 
     private String phoneModel;
+    private long offset = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("Fullscreen Activity", "In onCreate");
 
-        long offset = getIntent().getExtras().getLong("offset");
+        offset = getIntent().getExtras().getLong("offset");
         Log.d("offset", String.valueOf(offset));
 
 
@@ -74,6 +78,7 @@ public class FullscreenActivity extends Activity {
         //"Nexus 5"
         //"Nexus 7"
         phoneModel = Build.MODEL;
+        Log.d("MODEL PHONE", phoneModel);
         switch (phoneModel) {
             case "Nexus 5":
                 setContentView(R.layout.activity_fullscreen_nexus_5);
@@ -84,9 +89,22 @@ public class FullscreenActivity extends Activity {
             case "Nexus 7":
                 setContentView(R.layout.activity_fullscreen_nexus_7);
                 animationMove = AnimationUtils.loadAnimation(getApplicationContext(),
-                        R.anim.move_text_view_nexus_5);
+                        R.anim.move_text_view_nexus_7);
                 Log.d("Nexus 7","Nexus 7");
                 break;
+            case "Nexus 4":
+                setContentView(R.layout.activity_fullscreen_nexus_4);
+                animationMove = AnimationUtils.loadAnimation(getApplicationContext(),
+                        R.anim.move_text_view_nexus_4);
+                Log.d("Nexus 4","Nexus 4");
+                break;
+            case "SAMSUNG-SGH-I527":
+                setContentView(R.layout.activity_fullscreen_galaxy_mega);
+                animationMove = AnimationUtils.loadAnimation(getApplicationContext(),
+                        R.anim.move_text_view_galaxy_mega);
+                Log.d("SAMSUNG-SGH-I527","SAMSUNG-SGH-I527");
+                break;
+
             default:
                 setContentView(R.layout.activity_fullscreen_nexus_5);
                 animationMove = AnimationUtils.loadAnimation(getApplicationContext(),
@@ -183,8 +201,45 @@ public class FullscreenActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        //Log.d("width", String.valueOf(width));
-        delayedStartAnimation(3000);
+        delayedStartAnimation(getWaitTime());
+    }
+
+    private int getWaitTime(){
+        long currentTime = System.currentTimeMillis() + offset;
+        Log.d("currentTime",String.valueOf(currentTime));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(currentTime);
+        int minute = calendar.get(Calendar.MINUTE) + 1;
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        long startTime = calendar.getTimeInMillis();
+        long waitTimeLong = startTime - currentTime;
+        int  waitTimeInt = (int) waitTimeLong;
+
+        switch (phoneModel) {
+            case "Nexus 5":
+                //do nothing, Nexus 5 is first deivice, leave wait time alone
+                break;
+            case "Nexus 7":
+                waitTimeInt += 2216.5401; //takes Nexus 5 2216.5401 to break plane
+                break;
+            case "Nexus 4":
+                waitTimeInt = waitTimeInt + (int)2216.5401 + (int)2427.5994; //takes Nexus 7 2427.5994 to break plane
+                break;
+            case "SAMSUNG-SGH-I527":
+                waitTimeInt = waitTimeInt + (int)2216.5401 + (int)2427.5994 + (int) 2216.2629; //takes Nexus 4 2216.2629 to break plane
+                break;
+            default:
+
+                break;
+        }
+
+        Log.d("waitTimeInt",String.valueOf(waitTimeInt));
+
+
+        return waitTimeInt;
 
     }
 

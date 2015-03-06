@@ -8,6 +8,6 @@
         android:toXDelta="2600"
         android:duration="3000" />
 
-    <!--toXDelta is 1920 (width of Nexus 5) + 680(width of textView)-->
-    <!--This ends the animation such that right after the last letter goes out of view, it stops-->
+    <!--toXDelta = 1920 (width of Nexus 5) + 680(width of textView)-->
+    <!--Takes animation 2216.5401ms to cross plain of other side-->
 </set>
