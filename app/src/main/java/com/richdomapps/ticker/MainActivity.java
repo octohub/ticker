@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.TextView;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -27,6 +28,7 @@ public class MainActivity extends ActionBarActivity {
     //arbitrary change for guest branch
 
     private ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
+    private static TextView offsetTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +40,14 @@ public class MainActivity extends ActionBarActivity {
                     .commit();
         }
 
+
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 getOffsetTime(null);
             }
-        }, 5, 30, TimeUnit.SECONDS);
+        }, 11, 300, TimeUnit.SECONDS);
+
+
     }
 
     public void fullScreenActivity(View view){
@@ -50,6 +55,7 @@ public class MainActivity extends ActionBarActivity {
         intent.putExtra("offset", offset);
         startActivity(intent);
     }
+
 
 
     @Override
@@ -146,6 +152,7 @@ public class MainActivity extends ActionBarActivity {
             if (mIsBound) {
                 num = mBoundService.getOffsetFromService();
             }
+
             return num;
 
         }
@@ -154,6 +161,8 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(Long result) {
             offset = result;
+            String current = offsetTextView.getText().toString();
+            offsetTextView.setText(String.valueOf(current+":"+offset));
             Log.d("offset: ",String.valueOf(offset));
 
             //long currTime = System.currentTimeMillis()+offset;
@@ -174,6 +183,7 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            offsetTextView = (TextView) rootView.findViewById(R.id.offsetTextView);
             return rootView;
         }
     }

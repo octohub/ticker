@@ -4,7 +4,9 @@ import com.richdomapps.ticker.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,8 +19,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 
 
 /**
@@ -64,14 +66,15 @@ public class FullscreenActivity extends Activity {
 
     private String phoneModel;
     private long offset = 0;
+    private MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("Fullscreen Activity", "In onCreate");
-
         offset = getIntent().getExtras().getLong("offset");
         Log.d("offset", String.valueOf(offset));
+        mp = new MediaPlayer();
+        mp= MediaPlayer.create(this, R.raw.getdownonit);
 
 
         //Possible Phones
@@ -201,7 +204,9 @@ public class FullscreenActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        delayedStartAnimation(getWaitTime());
+        int wait = getWaitTime();
+        delayedStartAnimation(wait);
+        //resetAnimation(wait);
     }
 
     private int getWaitTime(){
@@ -220,7 +225,7 @@ public class FullscreenActivity extends Activity {
 
         switch (phoneModel) {
             case "Nexus 5":
-                //do nothing, Nexus 5 is first deivice, leave wait time alone
+                //do nothing, Nexus 5 is first device, leave wait time alone
                 break;
             case "Nexus 7":
                 waitTimeInt += 2216.5401; //takes Nexus 5 2216.5401 to break plane
@@ -230,6 +235,8 @@ public class FullscreenActivity extends Activity {
                 break;
             case "SAMSUNG-SGH-I527":
                 waitTimeInt = waitTimeInt + (int)2216.5401 + (int)2427.5994 + (int) 2216.2629; //takes Nexus 4 2216.2629 to break plane
+                // for MEGA, it takes 2367.8373 to cross plane.
+                // all added up: 2216.5401 + 2427.5994 + 2216.2629 + 2367.8373 = 9228.2397
                 break;
             default:
 
@@ -246,18 +253,9 @@ public class FullscreenActivity extends Activity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        Log.d("onWindowFocusChanges", "here");
-
         widthOfTextViewToAnimate = textViewToAnimate.getWidth();
         Log.d("width", String.valueOf(widthOfTextViewToAnimate));
-//        int amountOffscreen = (int)(widthOfTextViewToAnimate * 1); /* or whatever */
-//        boolean offscreen = true;
-//
-//        int xOffset = (offscreen) ? amountOffscreen : 0;
-//        RelativeLayout.LayoutParams rlParams =
-//                (RelativeLayout.LayoutParams)textViewToAnimate.getLayoutParams();
-//        rlParams.setMargins(-1*xOffset, 0, xOffset, 0);
-//        textViewToAnimate.setLayoutParams(rlParams);
+
 
     }
 
@@ -327,17 +325,46 @@ public class FullscreenActivity extends Activity {
     Runnable startAnimationRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.d("animation", "running");
+            mp.start();
             textViewToAnimate.startAnimation(animationMove);
+
 
         }
 
     };
 
+    Handler resetAnimationHandler = new Handler();
+    Runnable resetAnimationRunnable = new Runnable() {
+        @Override
+        public void run() {
+            textViewToAnimate.clearAnimation();
+
+        }
+
+    };
+
+
+
     private void delayedStartAnimation(int delayMillis) {
-        Log.d("delayedStartAnimation", "delayedStartAnimation");
         startAnimationHandler.removeCallbacks(startAnimationRunnable);
+
         startAnimationHandler.postDelayed(startAnimationRunnable, delayMillis);
+        resetAnimationHandler.postDelayed(resetAnimationRunnable, delayMillis + 4000);
+        startAnimationHandler.postDelayed(startAnimationRunnable, delayMillis + (int)9228.2397);
+
+        int restartAnimationWaitTime = delayMillis + 4000;
+        int startAnimationWaitTime = delayMillis + (int)9228.2397;
+
+        for(int i=0; i<20; i++){
+            restartAnimationWaitTime += (int)9228.2397;
+            startAnimationWaitTime += (int)9228.2397;
+            resetAnimationHandler.postDelayed(resetAnimationRunnable,restartAnimationWaitTime);
+            startAnimationHandler.postDelayed(startAnimationRunnable,startAnimationWaitTime);
+        }
+
+
 
     }
+
+
 }

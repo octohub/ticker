@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -41,9 +42,14 @@ public class NTPService extends Service {
 // This schedule a runnable task every 1 minute
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                getOffset();
+                long[] offsets = new long[3];
+                for(int i = 0; i<3; i++){
+                    Log.d("Run",i+"");
+                    offsets[i] = getOffset();
+                }
+                mOffset = getAverage(offsets);
             }
-        }, 0, 30, TimeUnit.SECONDS);
+        }, 0, 300, TimeUnit.SECONDS);
     }
 
     @Override
@@ -56,22 +62,30 @@ public class NTPService extends Service {
         return mOffset;
     }
 
-    private void getOffset(){
+    private long getAverage(long[] offsets){
+        Log.d("in here", "getAverage");
+        Arrays.sort(offsets);
+
+        for(long element : offsets){
+            Log.d("Ordered Offset", String.valueOf(element));
+        }
+
+        return offsets[1];
+
+    }
+
+    private long getOffset(){
         SntpClient client = new SntpClient();
         long offset = 0;
-        if (client.requestTime("pool.ntp.org", 10000)) {
+        if (client.requestTime("us.pool.ntp.org", 2000)) {
             long systemTime = System.currentTimeMillis();
             long ntpTime = client.getNtpTime() + SystemClock.elapsedRealtime() -
                     client.getNtpTimeReference();
-            Date current = new Date(ntpTime);
-
-
             offset = (ntpTime - systemTime);
-
-
         }
-
-        mOffset =  offset;
+        Log.d("OFFSET",offset+"");
+        //mOffset =  offset;
+        return offset;
 
     }
 
