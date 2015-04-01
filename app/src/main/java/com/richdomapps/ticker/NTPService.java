@@ -8,7 +8,6 @@ import android.os.SystemClock;
 import android.util.Log;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -42,12 +41,18 @@ public class NTPService extends Service {
 // This schedule a runnable task every 1 minute
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                long[] offsets = new long[3];
-                for(int i = 0; i<3; i++){
+                long[] offsets = new long[4];
+                for(int i = 0; i<4; i++){
                     Log.d("Run",i+"");
-                    offsets[i] = getOffset();
+                    long offset = getOffset();
+                    if(offset==Long.MAX_VALUE){
+                        i-=1;
+                    } else {
+                        offsets[i] = offset;
+                    }
                 }
                 mOffset = getAverage(offsets);
+                Log.d("mOffset", mOffset+"");
             }
         }, 0, 300, TimeUnit.SECONDS);
     }
@@ -70,13 +75,13 @@ public class NTPService extends Service {
             Log.d("Ordered Offset", String.valueOf(element));
         }
 
-        return offsets[1];
+        return (offsets[1] + offsets[2]) / 2;
 
     }
 
     private long getOffset(){
         SntpClient client = new SntpClient();
-        long offset = 0;
+        long offset = Long.MAX_VALUE;
         if (client.requestTime("us.pool.ntp.org", 2000)) {
             long systemTime = System.currentTimeMillis();
             long ntpTime = client.getNtpTime() + SystemClock.elapsedRealtime() -

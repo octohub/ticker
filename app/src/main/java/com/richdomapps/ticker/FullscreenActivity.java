@@ -4,8 +4,6 @@ import com.richdomapps.ticker.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.res.AssetFileDescriptor;
-import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -75,6 +73,7 @@ public class FullscreenActivity extends Activity {
         Log.d("offset", String.valueOf(offset));
         mp = new MediaPlayer();
         mp= MediaPlayer.create(this, R.raw.getdownonit);
+
 
 
         //Possible Phones
@@ -204,12 +203,13 @@ public class FullscreenActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        int wait = getWaitTime();
-        delayedStartAnimation(wait);
-        //resetAnimation(wait);
+
+        delayedStartAnimation(getStartAnimationWaitTime());
+        delayedStartMusic(getStartMusicWaitTime());
+
     }
 
-    private int getWaitTime(){
+    private int getStartAnimationWaitTime(){
         long currentTime = System.currentTimeMillis() + offset;
         Log.d("currentTime",String.valueOf(currentTime));
         Calendar calendar = Calendar.getInstance();
@@ -248,6 +248,23 @@ public class FullscreenActivity extends Activity {
 
         return waitTimeInt;
 
+    }
+
+    private int getStartMusicWaitTime(){
+        long currentTime = System.currentTimeMillis() + offset;
+        Log.d("currentTime",String.valueOf(currentTime));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(currentTime);
+        int minute = calendar.get(Calendar.MINUTE) + 1;
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        long startTime = calendar.getTimeInMillis();
+        long waitTimeLong = startTime - currentTime;
+        int  waitTimeInt = (int) waitTimeLong;
+
+        return waitTimeInt;
     }
 
     @Override
@@ -327,8 +344,6 @@ public class FullscreenActivity extends Activity {
         public void run() {
             mp.start();
             textViewToAnimate.startAnimation(animationMove);
-
-
         }
 
     };
@@ -339,6 +354,15 @@ public class FullscreenActivity extends Activity {
         public void run() {
             textViewToAnimate.clearAnimation();
 
+        }
+
+    };
+
+    Handler startMusicHandler = new Handler();
+    Runnable startMusicRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mp.start();
         }
 
     };
@@ -361,10 +385,10 @@ public class FullscreenActivity extends Activity {
             resetAnimationHandler.postDelayed(resetAnimationRunnable,restartAnimationWaitTime);
             startAnimationHandler.postDelayed(startAnimationRunnable,startAnimationWaitTime);
         }
-
-
-
     }
 
-
+    private void delayedStartMusic(int delayMillis){
+        startMusicHandler.removeCallbacks(startMusicRunnable);
+        startMusicHandler.postDelayed(startMusicRunnable, delayMillis);
+    }
 }
