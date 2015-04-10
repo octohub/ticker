@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -44,16 +46,51 @@ public class MainActivity extends ActionBarActivity {
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 getOffsetTime(null);
+                //fullScreenActivity(null);
             }
         }, 11, 300, TimeUnit.SECONDS);
 
 
     }
 
+    Handler startFullScreenActivityHandler = new Handler();
+    Runnable startFullScreenActivityRunnable = new Runnable() {
+        @Override
+        public void run() {
+            openFullScreenActivity();
+
+
+        }
+
+    };
+
     public void fullScreenActivity(View view){
+        long currentTime = System.currentTimeMillis() + offset;
+        Log.d("currentTime",String.valueOf(currentTime));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(currentTime);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 58);
+
+        //long currTime = System.currentTimeMillis()+offset;
+        //long waitTime = playTime-currTime;
+
+        long startTime = calendar.getTimeInMillis();
+        long waitTimeLong = startTime - currentTime;
+        int  waitTimeInt = (int) waitTimeLong;
+
+        startFullScreenActivityHandler.removeCallbacks(startFullScreenActivityRunnable);
+        startFullScreenActivityHandler.postDelayed(startFullScreenActivityRunnable, waitTimeInt);
+    }
+
+    public void openFullScreenActivity(){
         Intent intent = new Intent(this, FullscreenActivity.class);
         intent.putExtra("offset", offset);
         startActivity(intent);
+
     }
 
 
@@ -164,6 +201,7 @@ public class MainActivity extends ActionBarActivity {
             String current = offsetTextView.getText().toString();
             offsetTextView.setText(String.valueOf(current+":"+offset));
             Log.d("offset: ",String.valueOf(offset));
+            fullScreenActivity(null);
 
             //long currTime = System.currentTimeMillis()+offset;
             //long waitTime = playTime-currTime;

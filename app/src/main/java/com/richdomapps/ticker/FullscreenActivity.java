@@ -260,6 +260,9 @@ public class FullscreenActivity extends Activity {
         calendar.set(Calendar.MILLISECOND, 0);
         calendar.set(Calendar.SECOND, 0);
 
+        //long currTime = System.currentTimeMillis()+offset;
+        //long waitTime = playTime-currTime;
+
         long startTime = calendar.getTimeInMillis();
         long waitTimeLong = startTime - currentTime;
         int  waitTimeInt = (int) waitTimeLong;
