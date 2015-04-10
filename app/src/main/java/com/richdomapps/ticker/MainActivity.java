@@ -1,14 +1,11 @@
 package com.richdomapps.ticker;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,13 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -42,15 +38,6 @@ public class MainActivity extends ActionBarActivity {
                     .commit();
         }
 
-
-        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                getOffsetTime(null);
-                //fullScreenActivity(null);
-            }
-        }, 11, 300, TimeUnit.SECONDS);
-
-
     }
 
     Handler startFullScreenActivityHandler = new Handler();
@@ -58,14 +45,69 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void run() {
             openFullScreenActivity();
-
-
         }
 
     };
 
+    Handler getOffSetHandler = new Handler();
+    Runnable getOffSetRunnable = new Runnable() {
+        @Override
+        public void run() {
+            new FinalOffsetTask().execute();
+//            start();
+//            openFullScreenActivity();
+        }
+
+    };
+
+    public int getWaitTimeBeforeGetOffSet(){
+        long currentTime = System.currentTimeMillis();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(currentTime);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 50);
+
+        //long currTime = System.currentTimeMillis()+offset;
+        //long waitTime = playTime-currTime;
+
+        long startTime = calendar.getTimeInMillis();
+        long waitTimeLong = startTime - currentTime;
+        int  waitTimeInt = (int) waitTimeLong;
+        return waitTimeInt;
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getOffSetHandler.removeCallbacks(getOffSetRunnable);
+        int waitTimeInt = getWaitTimeBeforeGetOffSet();
+        getOffSetHandler.postDelayed(getOffSetRunnable, waitTimeInt);
+        new InitialOffsetTask().execute();
+
+        new CountDownTimer(waitTimeInt, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                offsetTextView.setText(initialLine + "Calculating Final Offset in: " + millisUntilFinished / 1000 + " seconds");
+            }
+
+            public void onFinish() {
+                offsetTextView.setText(initialLine + "Calculating Final Offset in: 0 seconds \nCalculating Final Offset");
+            }
+        }.start();
+
+    }
+
     public void fullScreenActivity(View view){
-        long currentTime = System.currentTimeMillis() + offset;
+        long currentTime;
+
+        currentTime = System.currentTimeMillis() + initialOffset;
+
+
+
         Log.d("currentTime",String.valueOf(currentTime));
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(currentTime);
@@ -84,13 +126,35 @@ public class MainActivity extends ActionBarActivity {
 
         startFullScreenActivityHandler.removeCallbacks(startFullScreenActivityRunnable);
         startFullScreenActivityHandler.postDelayed(startFullScreenActivityRunnable, waitTimeInt);
+
+        new CountDownTimer(waitTimeInt + 2000, 1000) { //add 2000 because its 2 seconds after opening new activity
+
+            public void onTick(long millisUntilFinished) {
+                offsetTextView.setText(initialLine + "Calculating Final Offset in: 0 seconds \nCalculating Final Offset" +
+                        "\nFinal Offset is: " + finalOffset + "ms" +
+                        "\nStarting Music in:  " + millisUntilFinished / 1000 + " seconds");
+            }
+
+            public void onFinish() {
+                //offsetTextView.setText("Calculating Offset in: 0 seconds\nCalculating Offset");
+            }
+        }.start();
+
     }
 
     public void openFullScreenActivity(){
         Intent intent = new Intent(this, FullscreenActivity.class);
-        intent.putExtra("offset", offset);
-        startActivity(intent);
+        //finalOffset = Long.MAX_VALUE; leave this commented unless testing that finalOffset failed, fall back on initialOffset
+        if(finalOffset != Long.MAX_VALUE){
+            intent.putExtra("offset", finalOffset);;
 
+        } else {
+            Log.d("Using", "IINNITITAL");
+            intent.putExtra("offset", initialOffset);;
+
+        }
+        //intent.putExtra("offset", finalOffset);
+        startActivity(intent);
     }
 
 
@@ -117,97 +181,92 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean mIsBound;
-    private NTPService mBoundService;
-    private long offset = 0;
 
-    private ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            // This is called when the connection with the service has been
-            // established, giving us the service object we can use to
-            // interact with the service.  Because we have bound to a explicit
-            // service that we know is running in our own process, we can
-            // cast its IBinder to a concrete class and directly access it.
-            mBoundService = ((NTPService.LocalBinder) service).getService();
 
+    private long start() {
+        long[] offsets = new long[3];
+        for(int i = 0; i<3; i++){
+            Log.d("Run",i+"");
+            long offset = getOffset();
+            if(offset==Long.MAX_VALUE){
+                i-=1;
+            } else {
+                offsets[i] = offset;
+            }
+        }
+        long offset = getAverage(offsets);
+        return offset;
+
+    }
+
+    private long getAverage(long[] offsets){
+        Log.d("in here", "getAverage");
+        Arrays.sort(offsets);
+
+        for(long element : offsets){
+            Log.d("Ordered Offset", String.valueOf(element));
+        }
+
+        return offsets[1];
+
+    }
+
+    private long getOffset(){
+        SntpClient client = new SntpClient();
+        long offset = Long.MAX_VALUE;
+        if (client.requestTime("us.pool.ntp.org", 4000)) {
+            long systemTime = System.currentTimeMillis();
+            long ntpTime = client.getNtpTime() + SystemClock.elapsedRealtime() -
+                    client.getNtpTimeReference();
+            offset = (ntpTime - systemTime);
+        }
+        Log.d("OFFSET",offset+"");
+        //mOffset =  offset;
+        return offset;
+
+    }
+
+    private long initialOffset = Long.MAX_VALUE;
+    private String initialLine = "";
+
+    private class InitialOffsetTask extends AsyncTask<Void, Void, Long> {
+
+        @Override
+        protected Long doInBackground(Void...params) {
+            initialOffset = start();
+            return initialOffset;
 
         }
 
-        public void onServiceDisconnected(ComponentName className) {
-            // This is called when the connection with the service has been
-            // unexpectedly disconnected -- that is, its process crashed.
-            // Because it is running in our same process, we should never
-            // see this happen.
-            mBoundService = null;
+        @Override
+        protected void onPostExecute(Long result) {
+            offsetTextView.setText("Calculating Initial Offset\nInitial Offset: " + initialOffset + "ms\n");
+            initialLine = "Calculating Initial Offset\nInitial Offset: " + initialOffset + "ms\n";
+
+
+
 
         }
-    };
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        doBindService();
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        doUnbindService();
-    }
-
-    private void doBindService() {
-        // Establish a connection with the service.  We use an explicit
-        // class name because we want a specific service implementation that
-        // we know will be running in our own process (and thus won't be
-        // supporting component replacement by other applications).
-        Log.d("Binding Service", "Doing it");
-        bindService(new Intent(MainActivity.this,
-                NTPService.class), mConnection, Context.BIND_AUTO_CREATE);
-        mIsBound = true;
-    }
-
-    private void doUnbindService() {
-        if (mIsBound) {
-            // Detach our existing connection.
-            unbindService(mConnection);
-            mIsBound = false;
-            Log.d("Unbinding Service", "Doing it");
-        }
-    }
-
-    public void getOffsetTime(View view){
-        new DownloadFilesTask().execute();
-
-    }
-
-    private class DownloadFilesTask extends AsyncTask<Void, Void, Long> {
+    private long finalOffset = Long.MAX_VALUE;
+    private class FinalOffsetTask extends AsyncTask<Void, Void, Long> {
 
         @Override
         protected Long doInBackground(Void...params) {
 
-            long num = 0;
-            if (mIsBound) {
-                num = mBoundService.getOffsetFromService();
+            finalOffset = start();
+            return finalOffset;
+
+        }
+
+            @Override
+            protected void onPostExecute(Long result) {
+                fullScreenActivity(null);
+
             }
-
-            return num;
-
-        }
-
-
-        @Override
-        protected void onPostExecute(Long result) {
-            offset = result;
-            String current = offsetTextView.getText().toString();
-            offsetTextView.setText(String.valueOf(current+":"+offset));
-            Log.d("offset: ",String.valueOf(offset));
-            fullScreenActivity(null);
-
-            //long currTime = System.currentTimeMillis()+offset;
-            //long waitTime = playTime-currTime;
-
-        }
     }
+
+
 
     /**
      * A placeholder fragment containing a simple view.
@@ -215,6 +274,9 @@ public class MainActivity extends ActionBarActivity {
     public static class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() {
+
+
+
         }
 
         @Override
@@ -225,4 +287,6 @@ public class MainActivity extends ActionBarActivity {
             return rootView;
         }
     }
+
+
 }
