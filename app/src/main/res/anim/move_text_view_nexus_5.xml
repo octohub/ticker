@@ -5,9 +5,9 @@
     android:fillAfter="true">
 
     <translate
-        android:toXDelta="2600"
+        android:toXDelta="6085"
         android:duration="3000" />
 
-    <!--toXDelta = 1920 (width of Nexus 5) + 680(width of textView)-->
+    <!--toXDelta = 1920 (width of Nexus 5) + 4165(width of textView)-->
     <!--Takes animation 2216.5401ms to cross plain of other side-->
 </set>

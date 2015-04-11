@@ -16,12 +16,12 @@
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:keepScreenOn="true"
-            android:text="@string/dummy_content"
+            android:text="@string/band_name"
             android:textColor="#33b5e5"
-            android:textSize="50sp"
+            android:textSize="200dp"
             android:textStyle="bold"
             android:gravity="center_vertical"
-            android:layout_marginLeft="-454px" />
+            android:layout_marginLeft="-3165px" />
 
 
         <!--<TextView-->

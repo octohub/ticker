@@ -100,12 +100,6 @@ public class FullscreenActivity extends Activity {
                         R.anim.move_text_view_nexus_4);
                 Log.d("Nexus 4","Nexus 4");
                 break;
-            case "SAMSUNG-SGH-I527":
-                setContentView(R.layout.activity_fullscreen_galaxy_mega);
-                animationMove = AnimationUtils.loadAnimation(getApplicationContext(),
-                        R.anim.move_text_view_galaxy_mega);
-                Log.d("SAMSUNG-SGH-I527","SAMSUNG-SGH-I527");
-                break;
 
             default:
                 setContentView(R.layout.activity_fullscreen_nexus_5);
