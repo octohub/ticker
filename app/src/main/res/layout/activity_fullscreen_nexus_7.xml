@@ -10,11 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
+        <com.richdomapps.ticker.GroovyTextView
             android:id="@+id/fullscreen_content"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceSmall"
             android:keepScreenOn="true"
             android:text="@string/band_name"
             android:textColor="#33b5e5"
@@ -22,6 +21,8 @@
             android:textStyle="bold"
             android:gravity="center_vertical"
             android:layout_marginLeft="-2995px" />
+
+
 
 
         <!--<TextView-->

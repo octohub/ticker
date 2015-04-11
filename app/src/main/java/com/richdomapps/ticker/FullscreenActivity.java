@@ -79,6 +79,7 @@ public class FullscreenActivity extends Activity {
         //Possible Phones
         //"Nexus 5"
         //"Nexus 7"
+        //"Nexus 4"
         phoneModel = Build.MODEL;
         Log.d("MODEL PHONE", phoneModel);
         switch (phoneModel) {
@@ -222,7 +223,7 @@ public class FullscreenActivity extends Activity {
                 //do nothing, Nexus 5 is first device, leave wait time alone
                 break;
             case "Nexus 7":
-                waitTimeInt += 2216.5401; //takes Nexus 5 2216.5401 to break plane
+                waitTimeInt += 947.23; //takes Nexus 5 2216.5401 to break plane
                 break;
             case "Nexus 4":
                 waitTimeInt = waitTimeInt + (int)2216.5401 + (int)2427.5994; //takes Nexus 7 2427.5994 to break plane
