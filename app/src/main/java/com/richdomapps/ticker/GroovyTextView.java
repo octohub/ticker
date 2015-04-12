@@ -27,7 +27,7 @@ public class GroovyTextView extends TextView {
 
     private void init() {
         if (!isInEditMode()) {
-            Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/coaster.ttf");
+            Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/coaster1.ttf");
             setTypeface(tf);
         }
     }

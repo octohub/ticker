@@ -18,24 +18,8 @@
             android:text="@string/band_name"
             android:textColor="#33b5e5"
             android:textSize="200dp"
-            android:textStyle="bold"
             android:gravity="center_vertical"
-            android:layout_marginLeft="-2995px" />
-
-
-
-
-        <!--<TextView-->
-        <!--layout_marginLef = -680px for Nexus 5, -454px for Nexus 7-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="1"-->
-        <!--android:gravity="center_vertical"-->
-        <!--android:keepScreenOn="true"-->
-        <!--android:text="@string/dummy_content"-->
-        <!--android:textColor="#33b5e5"-->
-        <!--android:textSize="50sp"-->
-        <!--android:textStyle="bold" />-->
+            android:layout_marginLeft="-2778px" />
 
     </RelativeLayout>
 

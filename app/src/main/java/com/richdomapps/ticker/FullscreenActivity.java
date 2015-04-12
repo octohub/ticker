@@ -176,7 +176,7 @@ public class FullscreenActivity extends Activity {
 
         //For animation
 
-        // load the animation
+        //load the animation
 
         textViewToAnimate = (TextView) findViewById(R.id.fullscreen_content);
 
@@ -226,7 +226,7 @@ public class FullscreenActivity extends Activity {
                 waitTimeInt += 947.23; //takes Nexus 5 2216.5401 to break plane
                 break;
             case "Nexus 4":
-                waitTimeInt = waitTimeInt + (int)2216.5401 + (int)2427.5994; //takes Nexus 7 2427.5994 to break plane
+                waitTimeInt = waitTimeInt + (int)947.23 + (int)1226.6922; //takes Nexus 7 2427.5994 to break plane
                 break;
             case "SAMSUNG-SGH-I527":
                 waitTimeInt = waitTimeInt + (int)2216.5401 + (int)2427.5994 + (int) 2216.2629; //takes Nexus 4 2216.2629 to break plane
