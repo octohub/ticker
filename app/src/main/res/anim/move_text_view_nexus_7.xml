@@ -6,7 +6,7 @@
 
     <translate
         android:toXDelta="4698"
-        android:duration="2316" />
+        android:duration="3191" />
 
     <!--toXDelta = 1920 (width of Nexus 7) + 2778(width of textView)-->
     <!--Takes animation 2427.5994ms to cross plain of other side-->

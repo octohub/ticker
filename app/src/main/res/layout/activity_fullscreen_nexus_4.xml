@@ -19,7 +19,7 @@
             android:textColor="#33b5e5"
             android:textSize="200dp"
             android:gravity="center_vertical"
-            android:layout_marginLeft="-100px" />
+            android:layout_marginLeft="-2778px" />
 
 
     </RelativeLayout>

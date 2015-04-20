@@ -223,13 +223,13 @@ public class FullscreenActivity extends Activity {
                 //do nothing, Nexus 5 is first device, leave wait time alone
                 break;
             case "Nexus 7":
-                waitTimeInt += 947.23; //takes Nexus 5 2216.5401 to break plane
+                waitTimeInt += 947.23; //takes Nexus 5 947.23 to cross plane
                 break;
             case "Nexus 4":
-                waitTimeInt = waitTimeInt + (int)947.23 + (int)1226.6922; //takes Nexus 7 2427.5994 to break plane
+                waitTimeInt = waitTimeInt + (int)947.23 + (int)1304.95; //takes Nexus 7 1304.95 to break plane
                 break;
             case "SAMSUNG-SGH-I527":
-                waitTimeInt = waitTimeInt + (int)2216.5401 + (int)2427.5994 + (int) 2216.2629; //takes Nexus 4 2216.2629 to break plane
+                waitTimeInt = waitTimeInt + (int)947.23 + (int)1304.95 + (int) 883.194 ; //takes Nexus 4 883.194 to break plane
                 // for MEGA, it takes 2367.8373 to cross plane.
                 // all added up: 2216.5401 + 2427.5994 + 2216.2629 + 2367.8373 = 9228.2397
                 break;
@@ -371,15 +371,15 @@ public class FullscreenActivity extends Activity {
         startAnimationHandler.removeCallbacks(startAnimationRunnable);
 
         startAnimationHandler.postDelayed(startAnimationRunnable, delayMillis);
-        resetAnimationHandler.postDelayed(resetAnimationRunnable, delayMillis + 4000);
-        startAnimationHandler.postDelayed(startAnimationRunnable, delayMillis + (int)9228.2397);
+        resetAnimationHandler.postDelayed(resetAnimationRunnable, delayMillis + (int)3135.374);
+        startAnimationHandler.postDelayed(startAnimationRunnable, delayMillis + (int)3135.374);
 
-        int restartAnimationWaitTime = delayMillis + 4000;
-        int startAnimationWaitTime = delayMillis + (int)9228.2397;
+        int restartAnimationWaitTime = delayMillis +(int)3135.374;
+        int startAnimationWaitTime = delayMillis + (int)3135.374;
 
         for(int i=0; i<20; i++){
-            restartAnimationWaitTime += (int)9228.2397;
-            startAnimationWaitTime += (int)9228.2397;
+            restartAnimationWaitTime += (int)3135.374;
+            startAnimationWaitTime += (int)3135.374;
             resetAnimationHandler.postDelayed(resetAnimationRunnable,restartAnimationWaitTime);
             startAnimationHandler.postDelayed(startAnimationRunnable,startAnimationWaitTime);
         }

@@ -5,9 +5,9 @@
     android:fillAfter="true">
 
     <translate
-        android:toXDelta="4915"
-        android:duration="3000" />
+        android:toXDelta="4058"
+        android:duration="2800" />
 
-    <!--toXDelta = 1280 (width of Nexus 4) + 2995(width of textView)-->
+    <!--toXDelta = 1280 (width of Nexus 4) + 2778(width of textView)-->
     <!--This ends the animation such that right after the last letter goes out of view, it stops-->
 </set>
