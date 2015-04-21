@@ -16,7 +16,6 @@
             android:layout_height="match_parent"
             android:keepScreenOn="true"
             android:text="@string/band_name"
-            android:textColor="#33b5e5"
             android:textSize="200dp"
             android:gravity="center_vertical"
             android:layout_marginLeft="-2778px" />
@@ -50,6 +49,16 @@
                 android:text="@string/dummy_button" />
 
         </LinearLayout>
+
+        <com.richdomapps.ticker.GroovyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Down"
+            android:visibility="invisible"
+            android:textSize="200dp"
+            android:id="@+id/get_textview"
+            android:layout_gravity="center" />
 
 
     </FrameLayout>

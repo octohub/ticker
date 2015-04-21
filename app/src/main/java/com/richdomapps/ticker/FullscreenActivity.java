@@ -17,7 +17,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.Calendar;
 
 
@@ -58,6 +57,7 @@ public class FullscreenActivity extends Activity {
 
     // For Animation
     private TextView textViewToAnimate;
+    private TextView lyricTextView;
     private int widthOfTextViewToAnimate;
 
     private Animation animationMove;
@@ -179,6 +179,8 @@ public class FullscreenActivity extends Activity {
         //load the animation
 
         textViewToAnimate = (TextView) findViewById(R.id.fullscreen_content);
+        lyricTextView = (TextView) findViewById(R.id.get_textview);
+
 
     }
 
@@ -199,8 +201,8 @@ public class FullscreenActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        delayedStartAnimation(getStartAnimationWaitTime());
         delayedStartMusic(getStartMusicWaitTime());
+        delayedStartAnimation(getStartAnimationWaitTime());
 
     }
 
@@ -340,7 +342,7 @@ public class FullscreenActivity extends Activity {
     Runnable startAnimationRunnable = new Runnable() {
         @Override
         public void run() {
-            mp.start();
+            //mp.start();
             textViewToAnimate.startAnimation(animationMove);
         }
 
@@ -365,6 +367,27 @@ public class FullscreenActivity extends Activity {
 
     };
 
+    Handler showLyricHandler = new Handler();
+    Runnable showLyricRunnable = new Runnable() {
+        @Override
+        public void run() {
+            lyricTextView.setVisibility(View.VISIBLE);
+            Log.d("Setting", "Text");
+        }
+
+    };
+
+    Handler resetLyricHandler = new Handler();
+    Runnable resetLyricRunnable = new Runnable() {
+        @Override
+        public void run() {
+            lyricTextView.setVisibility(View.INVISIBLE);
+
+        }
+
+    };
+
+
 
 
     private void delayedStartAnimation(int delayMillis) {
@@ -373,6 +396,9 @@ public class FullscreenActivity extends Activity {
         startAnimationHandler.postDelayed(startAnimationRunnable, delayMillis);
         resetAnimationHandler.postDelayed(resetAnimationRunnable, delayMillis + (int)3135.374);
         startAnimationHandler.postDelayed(startAnimationRunnable, delayMillis + (int)3135.374);
+
+        showLyricHandler.removeCallbacks(showLyricRunnable);
+        showLyricHandler.postDelayed(showLyricRunnable, delayMillis + 27000);
 
         int restartAnimationWaitTime = delayMillis +(int)3135.374;
         int startAnimationWaitTime = delayMillis + (int)3135.374;
