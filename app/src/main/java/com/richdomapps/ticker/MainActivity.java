@@ -214,7 +214,7 @@ public class MainActivity extends ActionBarActivity {
     private long getOffset(){
         SntpClient client = new SntpClient();
         long offset = Long.MAX_VALUE;
-        if (client.requestTime("us.pool.ntp.org", 4000)) {
+        if (client.requestTime("us.pool.ntp.org", 6000)) {
             long systemTime = System.currentTimeMillis();
             long ntpTime = client.getNtpTime() + SystemClock.elapsedRealtime() -
                     client.getNtpTimeReference();

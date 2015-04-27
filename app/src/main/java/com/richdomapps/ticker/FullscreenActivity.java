@@ -59,6 +59,7 @@ public class FullscreenActivity extends Activity {
     private TextView textViewToAnimate;
     private TextView lyricTextView;
     private TextView itTextView;
+    private TextView interludeTextView;
     private int widthOfTextViewToAnimate;
 
     private Animation animationMove;
@@ -183,6 +184,7 @@ public class FullscreenActivity extends Activity {
         textViewToAnimate = (TextView) findViewById(R.id.fullscreen_content);
         lyricTextView = (TextView) findViewById(R.id.get_textview);
         itTextView = (TextView) findViewById(R.id.it_textview);
+        interludeTextView = (TextView) findViewById(R.id.come_textview);
 
 
     }
@@ -412,6 +414,26 @@ public class FullscreenActivity extends Activity {
 
     };
 
+    Handler showComeHandler = new Handler();
+    Runnable showComeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            itTextView.setVisibility(View.VISIBLE);
+            interludeTextView.setVisibility(View.INVISIBLE);
+            Log.d("Setting", "Text");
+        }
+
+    };
+
+    Handler resetComeHandler = new Handler();
+    Runnable reseComeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            itTextView.setVisibility(View.INVISIBLE);
+        }
+
+    };
+
 
 
 
@@ -422,6 +444,7 @@ public class FullscreenActivity extends Activity {
         resetAnimationHandler.postDelayed(resetAnimationRunnable, delayMillis + (int)3135.374);
         startAnimationHandler.postDelayed(startAnimationRunnable, delayMillis + (int)3135.374);
         showLyricHandler.removeCallbacks(showLyricRunnable);
+        showComeHandler.removeCallbacks(showComeRunnable);
 
         switch (phoneModel) {
             case "Nexus 5":
@@ -429,32 +452,50 @@ public class FullscreenActivity extends Activity {
                 showItHandler.postDelayed(showItRunnable, musicStartDelay + 27450);
 
                 showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 29100);
-                showItHandler.postDelayed(showItRunnable, musicStartDelay + 29550);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 29600);
 
                 showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 31100);
-                showItHandler.postDelayed(showItRunnable, musicStartDelay + 31550);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 31600);
+
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 33400);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 33900);
+
+                showComeHandler.postDelayed(showComeRunnable, musicStartDelay + 34750);
+
 
                 break;
             case "Nexus 7":
                 showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 27150);
                 showItHandler.postDelayed(showItRunnable, musicStartDelay + 27450);
 
-                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 29250);
-                showItHandler.postDelayed(showItRunnable, musicStartDelay + 29550);
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 29300);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 29600);
 
-                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 31250);
-                showItHandler.postDelayed(showItRunnable, musicStartDelay + 31550);
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 31300);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 31600);
+
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 33600);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 33900);
+
+                showComeHandler.postDelayed(showComeRunnable, musicStartDelay + 34825);
 
                 break;
             case "Nexus 4":
                 showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 27300);
                 showItHandler.postDelayed(showItRunnable, musicStartDelay + 27450);
 
-                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 29400);
-                showItHandler.postDelayed(showItRunnable, musicStartDelay + 29550);
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 29450);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 29600);
 
-                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 31400);
-                showItHandler.postDelayed(showItRunnable, musicStartDelay + 31550);
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 31450);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 31600);
+
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 33800);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 33900);
+
+                showComeHandler.postDelayed(showComeRunnable, musicStartDelay + 34900);
+
+                //34750
 
                 break;
             default:
