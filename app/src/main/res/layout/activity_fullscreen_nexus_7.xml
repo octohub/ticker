@@ -60,6 +60,16 @@
             android:id="@+id/get_textview"
             android:layout_gravity="center" />
 
+        <com.richdomapps.ticker.GroovyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="It"
+            android:visibility="invisible"
+            android:textSize="200dp"
+            android:id="@+id/it_textview"
+            android:layout_gravity="center" />
+
 
     </FrameLayout>
 

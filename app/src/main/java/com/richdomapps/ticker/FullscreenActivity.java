@@ -58,6 +58,7 @@ public class FullscreenActivity extends Activity {
     // For Animation
     private TextView textViewToAnimate;
     private TextView lyricTextView;
+    private TextView itTextView;
     private int widthOfTextViewToAnimate;
 
     private Animation animationMove;
@@ -65,6 +66,7 @@ public class FullscreenActivity extends Activity {
     private String phoneModel;
     private long offset = 0;
     private MediaPlayer mp;
+    private int musicStartDelay = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +182,7 @@ public class FullscreenActivity extends Activity {
 
         textViewToAnimate = (TextView) findViewById(R.id.fullscreen_content);
         lyricTextView = (TextView) findViewById(R.id.get_textview);
+        itTextView = (TextView) findViewById(R.id.it_textview);
 
 
     }
@@ -264,6 +267,7 @@ public class FullscreenActivity extends Activity {
         long waitTimeLong = startTime - currentTime;
         int  waitTimeInt = (int) waitTimeLong;
 
+        musicStartDelay = waitTimeInt;
         return waitTimeInt;
     }
 
@@ -371,6 +375,7 @@ public class FullscreenActivity extends Activity {
     Runnable showLyricRunnable = new Runnable() {
         @Override
         public void run() {
+            itTextView.setVisibility(View.INVISIBLE);
             lyricTextView.setVisibility(View.VISIBLE);
             Log.d("Setting", "Text");
         }
@@ -382,7 +387,27 @@ public class FullscreenActivity extends Activity {
         @Override
         public void run() {
             lyricTextView.setVisibility(View.INVISIBLE);
+        }
 
+    };
+
+
+    Handler showItHandler = new Handler();
+    Runnable showItRunnable = new Runnable() {
+        @Override
+        public void run() {
+            lyricTextView.setVisibility(View.INVISIBLE);
+            itTextView.setVisibility(View.VISIBLE);
+            Log.d("Setting", "Text");
+        }
+
+    };
+
+    Handler resetItHandler = new Handler();
+    Runnable resetItRunnable = new Runnable() {
+        @Override
+        public void run() {
+            itTextView.setVisibility(View.INVISIBLE);
         }
 
     };
@@ -396,9 +421,46 @@ public class FullscreenActivity extends Activity {
         startAnimationHandler.postDelayed(startAnimationRunnable, delayMillis);
         resetAnimationHandler.postDelayed(resetAnimationRunnable, delayMillis + (int)3135.374);
         startAnimationHandler.postDelayed(startAnimationRunnable, delayMillis + (int)3135.374);
-
         showLyricHandler.removeCallbacks(showLyricRunnable);
-        showLyricHandler.postDelayed(showLyricRunnable, delayMillis + 27000);
+
+        switch (phoneModel) {
+            case "Nexus 5":
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 27000);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 27450);
+
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 29100);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 29550);
+
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 31100);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 31550);
+
+                break;
+            case "Nexus 7":
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 27150);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 27450);
+
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 29250);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 29550);
+
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 31250);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 31550);
+
+                break;
+            case "Nexus 4":
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 27300);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 27450);
+
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 29400);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 29550);
+
+                showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 31400);
+                showItHandler.postDelayed(showItRunnable, musicStartDelay + 31550);
+
+                break;
+            default:
+                break;
+        }
+
 
         int restartAnimationWaitTime = delayMillis +(int)3135.374;
         int startAnimationWaitTime = delayMillis + (int)3135.374;
