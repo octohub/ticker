@@ -378,6 +378,7 @@ public class FullscreenActivity extends Activity {
         @Override
         public void run() {
             itTextView.setVisibility(View.INVISIBLE);
+            interludeTextView.setVisibility(View.INVISIBLE);
             lyricTextView.setVisibility(View.VISIBLE);
             Log.d("Setting", "Text");
         }
@@ -399,6 +400,7 @@ public class FullscreenActivity extends Activity {
         @Override
         public void run() {
             lyricTextView.setVisibility(View.INVISIBLE);
+            interludeTextView.setVisibility(View.INVISIBLE);
             itTextView.setVisibility(View.VISIBLE);
             Log.d("Setting", "Text");
         }
@@ -418,8 +420,8 @@ public class FullscreenActivity extends Activity {
     Runnable showComeRunnable = new Runnable() {
         @Override
         public void run() {
-            itTextView.setVisibility(View.VISIBLE);
-            interludeTextView.setVisibility(View.INVISIBLE);
+            itTextView.setVisibility(View.INVISIBLE);
+            interludeTextView.setVisibility(View.VISIBLE);
             Log.d("Setting", "Text");
         }
 
@@ -430,9 +432,35 @@ public class FullscreenActivity extends Activity {
         @Override
         public void run() {
             itTextView.setVisibility(View.INVISIBLE);
+
         }
 
     };
+
+    Handler hideItHandler = new Handler();
+    Runnable hideItRunnable = new Runnable() {
+        @Override
+        public void run() {
+            itTextView.setVisibility(View.INVISIBLE);
+            interludeTextView.setVisibility(View.INVISIBLE);
+
+            Log.d("Setting", "Text");
+        }
+
+    };
+
+    Handler closeHandler = new Handler();
+    Runnable closeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            finish();
+            System.exit(0);
+
+            Log.d("Setting", "Text");
+        }
+
+    };
+
 
 
 
@@ -460,8 +488,10 @@ public class FullscreenActivity extends Activity {
                 showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 33400);
                 showItHandler.postDelayed(showItRunnable, musicStartDelay + 33900);
 
-                showComeHandler.postDelayed(showComeRunnable, musicStartDelay + 34750);
+                //showComeHandler.postDelayed(showComeRunnable, musicStartDelay + 34700);
 
+                //closeHandler.postDelayed(closeRunnable, musicStartDelay + 36150);
+                //hideItHandler.postDelayed(hideItRunnable,musicStartDelay+36150);
 
                 break;
             case "Nexus 7":
@@ -477,7 +507,13 @@ public class FullscreenActivity extends Activity {
                 showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 33600);
                 showItHandler.postDelayed(showItRunnable, musicStartDelay + 33900);
 
-                showComeHandler.postDelayed(showComeRunnable, musicStartDelay + 34825);
+                //closeHandler.postDelayed(closeRunnable, musicStartDelay + 36150);
+
+                //showComeHandler.postDelayed(showComeRunnable, musicStartDelay + 34775);
+
+
+
+                //hideItHandler.postDelayed(hideItRunnable,musicStartDelay+36150);
 
                 break;
             case "Nexus 4":
@@ -493,9 +529,14 @@ public class FullscreenActivity extends Activity {
                 showLyricHandler.postDelayed(showLyricRunnable, musicStartDelay + 33800);
                 showItHandler.postDelayed(showItRunnable, musicStartDelay + 33900);
 
-                showComeHandler.postDelayed(showComeRunnable, musicStartDelay + 34900);
+                //showComeHandler.postDelayed(showComeRunnable, musicStartDelay + 34850);
+                //closeHandler.postDelayed(closeRunnable, musicStartDelay + 36150);
 
-                //34750
+
+
+                //hideItHandler.postDelayed(hideItRunnable,musicStartDelay+36150);
+
+                //35550
 
                 break;
             default:

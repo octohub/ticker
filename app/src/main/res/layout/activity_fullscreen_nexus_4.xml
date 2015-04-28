@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="now"
+            android:text="and"
             android:visibility="invisible"
             android:textSize="200dp"
             android:id="@+id/come_textview"
