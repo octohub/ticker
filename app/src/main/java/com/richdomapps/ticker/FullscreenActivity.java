@@ -208,7 +208,13 @@ public class FullscreenActivity extends Activity {
 
         delayedStartMusic(getStartMusicWaitTime());
         delayedStartAnimation(getStartAnimationWaitTime());
+        getNtpTime();
 
+    }
+
+    private long getNtpTime() {
+        long offset = getOffset();
+        return System.currentTimeMillis() + offset;
     }
 
     private int getStartAnimationWaitTime(){
@@ -348,10 +354,8 @@ public class FullscreenActivity extends Activity {
     Runnable startAnimationRunnable = new Runnable() {
         @Override
         public void run() {
-            //mp.start();
             textViewToAnimate.startAnimation(animationMove);
         }
-
     };
 
     Handler resetAnimationHandler = new Handler();
@@ -558,5 +562,9 @@ public class FullscreenActivity extends Activity {
     private void delayedStartMusic(int delayMillis){
         startMusicHandler.removeCallbacks(startMusicRunnable);
         startMusicHandler.postDelayed(startMusicRunnable, delayMillis);
+    }
+
+    public long getOffset() {
+        return offset;
     }
 }
