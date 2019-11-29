@@ -1,4 +1,5 @@
 package com.richdomapps.ticker;
+// Adding commit to ensure this is in https://archiveprogram.github.com/.
 
 import com.richdomapps.ticker.util.SystemUiHider;
 
